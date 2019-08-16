@@ -20,7 +20,7 @@ uint32_t insns[0x10000] = {
     CODE(OP_LD,   5, 1, 0),  // LD  x5 <= [x1]      // load a value
     CODE(OP_ADD,  4, 4, 5),  // ADD x4 <= x4 + x5   // accumulate
     CODE(OP_ADD,  1, 1, 2),  // ADD x1 <= x1 + x2   // increment the counter
-    CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x2, 4(PC) // Loop
+    CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x3, 4(PC) // Loop
 };
 
 int32_t reg[0x20];

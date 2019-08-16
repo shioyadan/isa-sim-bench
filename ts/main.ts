@@ -17,7 +17,7 @@ const insns = [
     CODE(OP_LD,   5, 1, 0),  // LD  x5 <= [x1]      // load a value
     CODE(OP_ADD,  4, 4, 5),  // ADD x4 <= x4 + x5   // accumulate
     CODE(OP_ADD,  1, 1, 2),  // ADD x1 <= x1 + x2   // increment the counter
-    CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x2, 4(PC) // Loop
+    CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x3, 4(PC) // Loop
 ];
 
 let reg = new Array<number>(0x20);
@@ -81,11 +81,47 @@ function body_compiled(){
         pc = OpLD (pc, 5, 1, 0);  // CODE(OP_LD,   5, 1, 0),  // LD  x5 <= [x1]      // load a value
         pc = OpADD(pc, 4, 4, 5);  // CODE(OP_ADD,  4, 4, 5),  // ADD x4 <= x4 + x5   // accumulate
         pc = OpADD(pc, 1, 1, 2);  // CODE(OP_ADD,  1, 1, 2),  // ADD x1 <= x1 + x2   // increment the counter
-        pc = OpBNE(pc, 1, 3, 4);  // CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x2, 4(PC) // Loop
+        pc = OpBNE(pc, 1, 3, 4);  // CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x3, 4(PC) // Loop
     }
 
    return true;
 }
+
+function body_compiled2(){
+    let pc = 0;
+
+    pc = OpLDI(pc, 1, 0, 0);   // CODE(OP_LDI,  1, 0, 0),  // LDI x1 <= 0     // counter
+    pc = OpLDI(pc, 2, 1, 0);   // CODE(OP_LDI,  2, 1, 0),  // LDI x2 <= 1     // constant 1
+    pc = OpLD (pc, 3, 1, 0);   // CODE(OP_LD,   3, 1, 0),  // LD  x3 <= [x1]  // loop end
+    pc = OpLDI(pc, 4, 0, 0);   // CODE(OP_LDI,  4, 0, 0),  // LDI x4 <= 0     // accumulator
+
+    let reg1 = reg[1];
+    let reg2 = reg[2];
+    let reg3 = reg[3];
+    let reg4 = reg[4];
+    let reg5 = reg[5];
+    while(pc != 8) {
+        //pc = OpLD (pc, 5, 1, 0);  // CODE(OP_LD,   5, 1, 0),  // LD  x5 <= [x1]      // load a value
+        reg5 = mem[reg1];
+        //pc++;
+        //pc = OpADD(pc, 4, 4, 5);  // CODE(OP_ADD,  4, 4, 5),  // ADD x4 <= x4 + x5   // accumulate
+        reg4 = reg4 + reg5;
+        //pc++;
+        //pc = OpADD(pc, 1, 1, 2);  // CODE(OP_ADD,  1, 1, 2),  // ADD x1 <= x1 + x2   // increment the counter
+        reg1 = reg1 + reg2;
+        //pc++;
+        //pc = OpBNE(pc, 1, 3, 4);  // CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x3, 4(PC) // Loop
+        pc = reg1 != reg3 ? 4 : (8);
+    }
+    reg[1] = reg1;
+    reg[2] = reg2;
+    reg[3] = reg3;
+    reg[4] = reg4;
+    reg[5] = reg5;
+
+   return true;
+}
+
 
 function main(){
     const RAND_MAX = 0x7fffffff;
@@ -97,8 +133,9 @@ function main(){
     }
 
     for (let i = 0; i < 10000; i++) {
-        //if (!body()) {
-        if (!body_compiled()) {
+        if (!body()) {
+        //if (!body_compiled()) {
+        //if (!body_compiled2()) {
             console.log("Unknown op code\n");
             return 1;
         }

@@ -18,7 +18,7 @@ insns = [
     CODE(OP_LD,   5, 1, 0),  # LD  x5 <= [x1]      // load a value
     CODE(OP_ADD,  4, 4, 5),  # ADD x4 <= x4 + x5   // accumulate
     CODE(OP_ADD,  1, 1, 2),  # ADD x1 <= x1 + x2   // increment the counter
-    CODE(OP_BNE,  1, 3, 4),  # BNE x1 != x2, 4(PC) // Loop
+    CODE(OP_BNE,  1, 3, 4),  # BNE x1 != x3, 4(PC) // Loop
 ]
 
 reg = [0] * 0x20
@@ -74,7 +74,7 @@ def main():
     for i in range(1, 0x10000):
         mem[i] = int(random.random() * RAND_MAX) & RAND_MAX | 0
 
-    #for i in range(0, 0x10000):
+    #for i in range(0, 10000):
     for i in range(0, 100):
         if (not body()):
             print("Unknown op code")

@@ -49,7 +49,7 @@ function OpBNE(pc: number, dst: number, src1: number, src2: number){
 }
 
 
-function body() {
+function body_interpreter() {
     let pc = 0;
     while(pc != 8){
         let code = insns[pc];
@@ -124,7 +124,7 @@ function body_compiled2(){
 }
 
 
-function main(test_name: string, test_func) {
+function main(test_func) {
 
     const RAND_MAX = 0x7fffffff;
     for (let i = 1; i < 0x10000; i++) { // i does not start from 0
@@ -146,24 +146,25 @@ function main(test_name: string, test_func) {
     for (let i = 0; i < 0x10000; i++) {
         sum += mem[i];
     }
-    console.log("javascript %s: loop=%d: [%s], Correct: %d, Executed: %d\n", test_name, count, sum == reg[4] ? "OK" : "NG", sum, reg[4]);
+    console.log("javascript %s: loop=%d: [%s], Correct: %d, Executed: %d\n", test_func.name, count, sum == reg[4] ? "OK" : "NG", sum, reg[4]);
 
 
     return 0;
 }
 
 let test_name = process.argv[2];
-let test_func = body;
+let test_func = body_interpreter;
 switch (test_name) {
-    case "interpreter": test_func = body; break;
-    case "compiled": test_func = body_compiled; break;
-    case "compiled2": test_func = body_compiled2; break;
+    case "interpreter": 
+        test_func = body_interpreter; break;
+    case "compiled": 
+        test_func = body_compiled; break;
+    case "compiled2": 
+        test_func = body_compiled2; break;
 
     default:
-        test_name = "body_compiled"; 
-        test_func = body_compiled; 
-        break;
+        test_func = body_interpreter; break;
 }
 
-main(test_name, test_func);
+main(test_func);
 

@@ -3,7 +3,7 @@ TARGET = dist/main.js
 all: $(TARGET)
 
 run: $(TARGET)
-	eval time node $(TARGET)
+	eval time node $(TARGET) 
 
 run-all: $(TARGET)
 	eval time node $(TARGET) interpreter

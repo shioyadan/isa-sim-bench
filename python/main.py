@@ -74,8 +74,8 @@ def main():
     for i in range(1, 0x10000):
         mem[i] = int(random.random() * RAND_MAX) & RAND_MAX | 0
 
-    #for i in range(0, 10000):
-    for i in range(0, 100):
+    count = 100
+    for i in range(0, count):
         if (not body()):
             print("Unknown op code")
             return 1
@@ -83,7 +83,7 @@ def main():
     sum = 0
     for i in range(0, 0x10000):
         sum += mem[i]
-    print("[%s], Correct: %d, Executed: %d\n", "OK" if sum == reg[4] else "NG", sum, reg[4])
+    print("Python interpreter: loop=%d: [%s], Correct: %d, Executed: %d\n" % (count,"OK" if sum == reg[4] else "NG", sum, reg[4]))
 
 
     return 0

@@ -70,6 +70,7 @@ function body() {
 }
 
 function body_compiled(){
+
     let pc = 0;
 
     pc = OpLDI(pc, 1, 0, 0);   // CODE(OP_LDI,  1, 0, 0),  // LDI x1 <= 0     // counter
@@ -111,7 +112,7 @@ function body_compiled2(){
         reg1 = reg1 + reg2;
         //pc++;
         //pc = OpBNE(pc, 1, 3, 4);  // CODE(OP_BNE,  1, 3, 4),  // BNE x1 != x3, 4(PC) // Loop
-        pc = reg1 != reg3 ? 4 : (8);
+        pc = reg1 != reg3 ? 4 : 8;
     }
     reg[1] = reg1;
     reg[2] = reg2;
@@ -123,7 +124,8 @@ function body_compiled2(){
 }
 
 
-function main(){
+function main(test_name: string, test_func) {
+
     const RAND_MAX = 0x7fffffff;
     for (let i = 1; i < 0x10000; i++) { // i does not start from 0
         mem[i] = (Math.random() * RAND_MAX) & RAND_MAX | 0;
@@ -132,10 +134,9 @@ function main(){
         reg[i] = 0;
     }
 
-    for (let i = 0; i < 10000; i++) {
-        if (!body()) {
-        //if (!body_compiled()) {
-        //if (!body_compiled2()) {
+    let count = 10000;
+    for (let i = 0; i < count; i++) {
+        if (!test_func()) {
             console.log("Unknown op code\n");
             return 1;
         }
@@ -145,10 +146,24 @@ function main(){
     for (let i = 0; i < 0x10000; i++) {
         sum += mem[i];
     }
-    console.log("[%s], Correct: %d, Executed: %d\n", sum == reg[4] ? "OK" : "NG", sum, reg[4]);
+    console.log("javascript %s: loop=%d: [%s], Correct: %d, Executed: %d\n", test_name, count, sum == reg[4] ? "OK" : "NG", sum, reg[4]);
 
 
     return 0;
 }
-main();
+
+let test_name = process.argv[2];
+let test_func = body;
+switch (test_name) {
+    case "interpreter": test_func = body; break;
+    case "compiled": test_func = body_compiled; break;
+    case "compiled2": test_func = body_compiled2; break;
+
+    default:
+        test_name = "body_compiled"; 
+        test_func = body_compiled; 
+        break;
+}
+
+main(test_name, test_func);
 

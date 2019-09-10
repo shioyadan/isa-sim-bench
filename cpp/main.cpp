@@ -80,7 +80,8 @@ int main(){
         reg[i] = 0;
     }
 
-    for (int i = 0; i < 10000; i++) {
+    int count = 10000;
+    for (int i = 0; i < count; i++) {
         if (!body()) {
             printf("Unknown op code\n");
             return 1;
@@ -91,7 +92,7 @@ int main(){
     for (int i = 0; i < 0x10000; i++) {
         sum += mem[i];
     }
-    printf("[%s], Correct: %d, Executed: %d\n", sum == reg[4] ? "OK" : "NG", sum, reg[4]);
+    printf("C++ interpreter: loop=%d: [%s], Correct: %d, Executed: %d\n", count, sum == reg[4] ? "OK" : "NG", sum, reg[4]);
     return 0;
 }
 

@@ -11,14 +11,14 @@ run-all: $(TARGET)
 	eval time node $(TARGET) compiled2
 
 $(TARGET): main.ts tsconfig.json Makefile node_modules
-	./node_modules/.bin/tsc
+	npx tsc
 
 clean:
 	rm ./dist/* -r -f
-	
+	rm node_modules -r -f
+
 node_modules:
 	npm install typescript
 	npm install @types/node
-	chmod 755 ./node_modules/.bin/tsc
 	
 
